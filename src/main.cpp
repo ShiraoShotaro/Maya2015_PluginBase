@@ -1,193 +1,75 @@
-
-
-#include <vector>
-#include <string>
-#include <maya/MStringArray.h>
-#include <maya/MGlobal.h>
-#include <maya/MDrawRegistry.h>
+ï»¿#include "NodeBase.hpp"
+#include "CommandBase.hpp"
 
 //*** INCLUDE HEADERS ***
 
 //***********************
 
-
-
-
 namespace {
-class CommandPair {
-public:
-	const MString command;
-	void * (*creator)();
-	CommandPair(const MString & command, void * (*creator)()) : command(command), creator(creator) {}
-	virtual ~CommandPair() {}
-private:
-	CommandPair() = delete;
-};
-
-class NodePair {
-public:
-	const MString node;
-	const MTypeId id;
-	void * (*creator)();   
-	MStatus (*initialize)();
-	const MPxNode::Type type;
-	NodePair(const MString & node, const MTypeId id, void * (*creator)(), MStatus (*initialize)(), const MPxNode::Type & type = MPxNode::Type::kDependNode) : node(node), id(id), creator(creator), initialize(initialize), type(type) {}
-	virtual ~NodePair() {}
-private:
-	NodePair() = delete;
-};
-
-//*** V‚µ‚¢ƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚éêŠ ***
-std::vector<CommandPair> getCommands(void) {
-	//ƒRƒ}ƒ“ƒh‚ğ‚±‚±‚É’Ç‰Á
-	//CommandPair("ƒRƒ}ƒ“ƒh–¼", [ƒNƒŠƒGƒCƒ^[ŠÖ”‚Ìƒ|ƒCƒ“ƒ^]),
-	return std::vector<CommandPair> {
-		//CommandPair("Hogehoge", wlib::Hogehoge::creator),
-	};
+constexpr char kProjectName[] = "__PROJECT_NAME__";
+constexpr char kVersion[] = "0.1";
 }
 
-//*** V‚µ‚¢ƒm[ƒh‚ğ’Ç‰Á‚·‚éêŠ ***
-std::vector<NodePair> getNodes(void) {
-	//ƒm[ƒh‚ğ‚±‚±‚É’Ç‰Á
-	//NodePair("ƒm[ƒh–¼", [Node ID], [ƒNƒŠƒGƒCƒ^[ŠÖ”‚Ìƒ|ƒCƒ“ƒ^], [initializeŠÖ”‚Ìƒ|ƒCƒ“ƒ^]),
-	return std::vector<NodePair> {
-		//NodePair("hogehoge", 0x71000, wlib::HogeHoge::creator, wlib::HogeHoge::initialize),
-	};
+MStatus mpb::NodeBase::addNodes(MFnPlugin & plugin)
+{
+	MStatus ret = MStatus::kSuccess;
+
+
+	return ret;
 }
 
 
-/** [hidden]addCommands
-* ƒRƒ}ƒ“ƒh‚ğ’Ç‰Á‚·‚éBƒRƒ}ƒ“ƒh‚Ìˆê——‚ÍgetCommandsŠÖ”“à‚É‹Lq‚·‚é
-* @param plugin ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
-* @throws MStatusException ƒRƒ}ƒ“ƒh‚ª“o˜^‚Å‚«‚È‚¢
-*/
-void addCommands(MFnPlugin & plugin) {
-	std::vector<CommandPair> cmd_pairs = getCommands();
-	for (auto p = cmd_pairs.begin(); p != cmd_pairs.end(); ++p) {
-		wlib::MStatusException::throwIf(plugin.registerCommand(p->command, p->creator), "ƒRƒ}ƒ“ƒh‚Ì“o˜^’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½ : ƒRƒ}ƒ“ƒh–¼" + p->command, "addCommands");
-	}
-}
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+// DO NOT TOUCH BELOW CODES.
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-/** [hidden]addNodes
-* ƒm[ƒh‚ğ’Ç‰Á‚·‚éBƒm[ƒh‚Ìˆê——‚ÍgetNodesŠÖ”“à‚É‹Lq‚·‚é
-* @param plugin ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
-* @throws MStatusException ƒm[ƒh‚ª“o˜^‚Å‚«‚È‚¢
-*/
-void addNodes(MFnPlugin & plugin) {
-	std::vector<NodePair> node_pairs = getNodes();
-	for (auto p = node_pairs.begin(); p != node_pairs.end(); ++p) {
-		wlib::MStatusException::throwIf(plugin.registerNode(p->node, p->id, p->creator, p->initialize, p->type), "ƒm[ƒh‚Ì“o˜^’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½ : ƒm[ƒh–¼" + p->node, "addNode");
-	}
-}
+std::vector<std::unique_ptr<mpb::NodeBase>> mpb::NodeBase::instances_;
 
-
-/** [hidden]removeCommands
-* ƒRƒ}ƒ“ƒh‚ğ“o˜^‰ğœ‚·‚éBƒRƒ}ƒ“ƒh‚Ìˆê——‚ÍgetCommandsŠÖ”“à‚É‹Lq‚·‚é
-* @param plugin ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
-* @throws MStatusException ƒRƒ}ƒ“ƒh‚ª“o˜^‰ğœ‚Å‚«‚È‚¢
-*/
-void removeCommands(MFnPlugin & plugin) {
-	std::vector<CommandPair> cmd_pairs = getCommands();
-	for (auto p = cmd_pairs.begin(); p != cmd_pairs.end(); ++p) {
-		wlib::MStatusException::throwIf(plugin.deregisterCommand(p->command), "ƒRƒ}ƒ“ƒh‚Ì“o˜^‰ğœ’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½ : ƒRƒ}ƒ“ƒh–¼" + p->command, "addCommands");
-	}
-}
-
-
-/** [hidden]addNodes
-* ƒm[ƒh‚ğ“o˜^‰ğœ‚·‚éBƒm[ƒh‚Ìˆê——‚ÍgetNodesŠÖ”“à‚É‹Lq‚·‚é
-* @param plugin ƒvƒ‰ƒOƒCƒ“ƒCƒ“ƒXƒ^ƒ“ƒX
-* @throws MStatusException ƒm[ƒh‚ª“o˜^‰ğœ‚Å‚«‚È‚¢
-*/
-void removeNodes(MFnPlugin & plugin) {
-	std::vector<NodePair> node_pairs = getNodes();
-	for (auto p = node_pairs.begin(); p != node_pairs.end(); ++p) {
-		wlib::MStatusException::throwIf(plugin.deregisterNode(p->id), "ƒm[ƒh‚Ì“o˜^’†‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½ : ƒm[ƒh–¼" + p->node, "addNode");
-	}
-}
-
-};
-
-
-/** initializePlugin
- * ƒvƒ‰ƒOƒCƒ“‚Ì‰Šú‰»ˆ—‚ğs‚¤Bmaya‘¤‚©‚çƒR[ƒ‹‚³‚ê‚éŠÖ”B
- */
-MStatus wlib::initializePlugin(MObject _obj) {
-	MFnPlugin plugin(_obj, "Autodesk", "2015 update2");
-	std::cerr << "White Library - wlibCameraTools Plug-in" << std::endl;
-	std::cerr << "version 1.0" << std::endl;
+MStatus initializePlugin(MObject obj) {
+	MFnPlugin plugin(obj, "Autodesk", "2015 update2");
 	MStatus stat = MStatus::kSuccess;
-	try {
-		addCommands(plugin);
-		addNodes(plugin);
 
-		//Translator
-		MStatusException::throwIf(plugin.registerFileTranslator("exaTranslator", "", &ExaTranslator::creator, "exaTranslatorOptions", "", true), "exaExport‚Ì’Ç‰Á‚É¸”s");
+#ifdef _DEBUG
+	std::cout.rdbuf(std::cerr.rdbuf());
+	std::cout << "[Development Mode] Start to load " << kProjectName << " plug-in." << std::endl;
+#endif
 
-		//CameraHelperHUDŠÖŒW
-		MStatusException::throwIf(plugin.registerNode("wlibCameraHelperHUD", 0x72000, &CameraHelperHUD::creator, &CameraHelperHUD::initialize, MPxNode::kLocatorNode, &CameraHelperHUD::drawDbClassification), "CameraHelperHUD‚Ì“o˜^‚É¸”s");
-		MStatusException::throwIf(MHWRender::MDrawRegistry::registerDrawOverrideCreator(CameraHelperHUD::drawDbClassification, CameraHelperHUD::drawRegistrantId, CameraHelperHUDDrawOverride::Creator), "CameraHelperHUDDrawOverride‚Ì“o˜^‚É¸”s");
+	do {
+		std::cout << "add Nodes." << std::endl;
+		if ((stat = mpb::NodeBase::addNodes(plugin)) != MStatus::kSuccess) break;
 
-		//CameraRigNodeŠÖŒW
-		MStatusException::throwIf(plugin.registerNode("wlibCameraRig", 0x72001, &CameraRigNode::creator, &CameraRigNode::initialize, MPxNode::kLocatorNode, &CameraRigNode::drawDbClassification), "CameraRigNode‚Ì“o˜^‚É¸”s");
-		MStatusException::throwIf(MHWRender::MDrawRegistry::registerDrawOverrideCreator(CameraRigNode::drawDbClassification, CameraRigNode::drawRegistrantId, CameraRigNodeDrawOverride::Creator), "CameraRigNodeDrawOverride‚Ì“o˜^‚É¸”s");
+		// ADD HERE
 
-	}
-	catch (MStatusException e) {
-		std::cerr << e.toString("wlib::initializePlugin") << std::endl;
-		stat = e.stat;
-	}
-
-
-	//ƒƒjƒ…[‚Ì’Ç‰Á
-	MGlobal::executeCommand("wlibCameraTools()", true);
-
+	} while (false);
 
 	if (stat == MStatus::kSuccess) {
-		//“Ç‚İ‚İŠ®—¹
-		std::cerr << "Finished to load wlibCameraTools plug-in." << std::endl;
-		std::cerr << "(c) 2017 S.Shirao" << std::endl;
 #ifdef _DEBUG
-		//ƒfƒoƒbƒO‚Ì‚İ•W€o—Í‚ğƒGƒ‰[o—Í‚ÖØ‚è‘Ö‚¦
-		std::cout.rdbuf(std::cerr.rdbuf());
-		std::cout << "wlibCameraTools is debug mode." << std::endl;
+		std::cerr << "[Development Mode]" << kProjectName << " - version " << kVersion << std::endl;
+#else
+		std::cerr << kProjectName << " - version " << kVersion << std::endl;
 #endif
 	}
-	else {
-		//“Ç‚İ‚İ¸”s
-		std::cerr << "Failed to initialize plugin." << std::endl;
-	}
-
+	else std::cerr << "Failed to load " << kProjectName << " plug-in." << std::endl;
 	return stat;
 }
 
-
-/** uninitializePlugin
- * ƒvƒ‰ƒOƒCƒ“‚ÌƒAƒ“ƒ[ƒhˆ—‚ğs‚¤Bmaya‘¤‚©‚çƒR[ƒ‹‚³‚ê‚éŠÖ”B
- */
-MStatus wlib::uninitializePlugin(MObject _obj) {
-	MFnPlugin plugin(_obj);
+MStatus uninitializePlugin(MObject obj) {
+	MFnPlugin plugin(obj);
 	MStatus stat = MStatus::kSuccess;
-	try {
-		removeCommands(plugin);
-		removeNodes(plugin);
 
-		MStatusException::throwIf(plugin.deregisterFileTranslator("exaTranslator"), "exaExport‚Ì‰ğœ‚É¸”s");
+	std::cout << "[Development Mode] Start to uninitialize " << kProjectName << " plug-in." << std::endl;
 
-		MStatusException::throwIf(MHWRender::MDrawRegistry::deregisterGeometryOverrideCreator(CameraHelperHUD::drawDbClassification, CameraHelperHUD::drawRegistrantId), "CameraHUDDrawOverride‚Ì‰ğœ‚É¸”s‚µ‚Ü‚µ‚½");
-		MStatusException::throwIf(plugin.deregisterNode(0x72000), "CameraHUD‚Ì‰ğœ‚É¸”s");
+	do {
 
-		MStatusException::throwIf(MHWRender::MDrawRegistry::deregisterGeometryOverrideCreator(CameraRigNode::drawDbClassification, CameraRigNode::drawRegistrantId), "CameraRigNodeDrawOverride‚Ì‰ğœ‚É¸”s‚µ‚Ü‚µ‚½");
-		MStatusException::throwIf(plugin.deregisterNode(0x72001), "CameraRigNode‚Ì‰ğœ‚É¸”s");
-	}
-	catch (MStatusException e) {
-		std::cerr << e.toString("wlib::uninitializePlugin") << std::endl;
-		stat = e.stat;
-	}
+		std::cout << "remove Nodes." << std::endl;
+		if ((stat = mpb::NodeBase::removeNodes(plugin)) != MStatus::kSuccess) break;
 
-	//ƒƒjƒ…[‚Ì‰ğœ
-	//MGlobal::executeCommand("wlib_DeleteUI");
+	} while (false);
 
 	return stat;
 }
