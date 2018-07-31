@@ -23,6 +23,7 @@ public:
 
 	const bool is_undoable_;	///< Is undoable.
 
+	CommandBase(void) = delete;
 	
 	/// @brief Constructor
 	///

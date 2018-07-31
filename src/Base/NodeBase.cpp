@@ -10,3 +10,19 @@ mpb::NodeBase::NodeBase(const MTypeId id, const MString & name, const MString & 
 
 mpb::NodeBase::~NodeBase(void)
 {}
+
+void mpb::NodeBase::computeProcess(const MPlug & plug, MDataBlock & data)
+{
+}
+
+void mpb::NodeBase::setAttributeOption(MFnAttribute & attr, const bool isReadable, const bool isWritable, const bool isStorable, const bool isCache)
+{
+}
+
+void mpb::NodeBase::attributeAffects(MObjects_const & whenChanges, MObjects_const & isAffect)
+{
+}
+
+void mpb::NodeBase::addAttributeE(const MObject & obj, const MFnAttribute & attr)
+{
+}

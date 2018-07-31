@@ -6,6 +6,7 @@
 #include <maya/MTypeId.h>
 #include <maya/MStatus.h>
 #include <maya/MPxNode.h>
+#include <maya/MFnAttribute.h>
 #include <vector>
 #include <memory>
 
@@ -29,6 +30,7 @@ public:
 
 	const MString classification_;	///< Custom classification.
 	
+	NodeBase(void) = delete;
 
 	/// @brief Constructor
 	///
@@ -54,7 +56,7 @@ public:
 	///
 	/// Currently, do nothing.
 	virtual ~NodeBase(void);
-	
+
 
 	/// @brief node addition.
 	///
@@ -78,12 +80,48 @@ public:
 
 	static void _setMFnPluginPtr(MFnPlugin * plugin);
 
+protected:
+
+	/// @brief 継承先のクラスでオーバーライドすべきcompute関数
+	///
+	/// このクラスで用意した例外対策済のcompute関数を使うならば、このcomputeProcess関数をオーバーライドして使用してください。
+	/// もしも継承先のクラスで、computeもcomputeProcessもオーバーライド定義されていない場合は、問答無用でkUnknowParameterがmayaへ通達されます。
+	/// また、MStatusExceptionの第3引数を省略する場合、compute関数にて自動的にリネームされ、computeProcessと表示される。
+	/// @param plug 計算中のプラグ
+	/// @param data 編集可能な内部データ
+	virtual void computeProcess(const MPlug & plug, MDataBlock & data);
+
+
+	/// @brief アトリビュートの属性(readable, writable, storable, cached)を一括指定します。
+	/// @param isReadable 読み込み可能か
+	/// @param isWritable 書き込み可能か
+	/// @param isStorable 保存可能か
+	/// @throws MStatusException アトリビュート属性の指定時に何らかのエラーが発生した場合
+	static void setAttributeOption(MFnAttribute & attr, const bool isReadable, const bool isWritable, const bool isStorable, const bool isCache);
+
+	
+	using MObjects_const = const std::vector<const MObject *>;
+
+
+	/// @brief アトリビュートの変更の影響設定を一括で行います。
+	/// @param whenChanges 変更を監視するアトリビュート
+	/// @param isWritable 変更を行うアトリビュート
+	/// @param isStorable 保存可能か
+	/// @throws MStatusException アトリビュート属性の指定時に何らかのエラーが発生した場合
+	static void attributeAffects(MObjects_const & whenChanges, MObjects_const & isAffect);
+
+
+	/// @brief アトリビュートを追加します。
+	///
+	/// エラーが起きたときの対応を含めた、addAttribute関数のラッパー関数です。
+	/// @param obj プラグオブジェクト
+	/// @param attr アトリビュート 
+	static void addAttributeE(const MObject & obj, const MFnAttribute & attr);
+
 private:
-
-
+	
 	const bool own_classification_;
-
-
+	
 	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<NodeBase>> instances_;
 
