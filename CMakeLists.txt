@@ -51,7 +51,7 @@ set(LIBRARY_DIR ${MAYA_ROOT_PATH}/lib)
 link_directories("${LIBRARY_DIR}")
 add_library(${LIBRARY_NAME} SHARED ${proj_cpp_files} ${proj_hpp_files})
 
-target_link_libraries(${LIBRARY_NAME} OpenMaya.lib Foundation.lib OpenMaya.lib OpenMayaUI.lib OpenMayaRender.lib OpenMayaAnim.lib)
+target_link_libraries(${LIBRARY_NAME} Foundation.lib OpenMaya.lib OpenMayaUI.lib OpenMayaRender.lib OpenMayaAnim.lib)
 
 # Target Properties
 set_target_properties(${LIBRARY_NAME} PROPERTIES SUFFIX ".mll")

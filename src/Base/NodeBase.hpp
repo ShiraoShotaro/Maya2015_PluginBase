@@ -5,11 +5,11 @@
 #include <maya/MString.h>
 #include <maya/MTypeId.h>
 #include <maya/MStatus.h>
-#include <maya/MFnPlugin.h>
 #include <maya/MPxNode.h>
-#include <type_traits>
 #include <vector>
 #include <memory>
+
+class MFnPlugin;
 
 namespace mpb {
 
@@ -18,7 +18,7 @@ namespace mpb {
 /// When you implement your own command, you have to inherit this class.
 ///
 ///
-class NodeBase {
+class NodeBase : public MPxNode {
 public:
 
 	const MString name_;			///< Node name initialized by constructor.
@@ -54,37 +54,15 @@ public:
 	///
 	/// Currently, do nothing.
 	virtual ~NodeBase(void);
-
-
-	/// @brief Instance creator function.
-	///
-	/// You must override this function in inheritted class.
-	/// And create own instance, then return the adress.
-	///
-	/// @return When you inherit this function, return the address of the instance. Default returns nullptr.
-	virtual void * creator(void) = 0;
-
-
-	/// @brief Initializer
-	///
-	/// You can override this function in inheritted class.
-	/// And initialize node's attributes.
-	///
-	/// If default function is used, do nothing and return MStatus::Success
-	///
-	/// @return Initializing status.
-	virtual MStatus initialize(void);
 	
 
 	/// @brief node addition.
 	///
 	/// YOU HAVE TO EDIT THIS FUNCTION AT main.cpp .
 	///
-	/// @param [in,out] plugin MFnPlugin instance.
-	///
 	/// @retval MStatus::kSuccess Succeed.
 	/// @retval else Failed to add nodes.
-	static MStatus addNodes(MFnPlugin & plugin);
+	static MStatus addNodes(void);
 
 
 	/// @brief remove nodes.
@@ -98,26 +76,27 @@ public:
 	/// @retval else Failed to add nodes.
 	static MStatus removeNodes(MFnPlugin & plugin);
 
+	static void _setMFnPluginPtr(MFnPlugin * plugin);
+
 private:
+
 
 	const bool own_classification_;
 
+
+	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<NodeBase>> instances_;
 
 	template <class _INHERIT_FROM_NODEBASE, class ...Args>
-	static void addNode(MFnPlugin & plugin, Args... args);
+	static void addNode(Args... args);
+	static void _addNode(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<NodeBase> && node);
 
 };
 
-// inline implements
+
 template<class _INHERIT_FROM_NODEBASE, class ...Args>
-inline void NodeBase::addNode(MFnPlugin & plugin, Args ...args)
-{
-	if (std::is_base_of<NodeBase, _INHERIT_FROM_NODEBASE>) {
-		std::unique_ptr<NodeBase> ptr = std::make_unique<_INHERIT_FROM_NODEBASE>(args);
-		plugin.registerNode(ptr->name_, ptr->id, ptr->creator, ptr->initialize, ptr->type, (ptr->own_classification ? &ptr->classification_, nullptr));
-		NodeBase::instances_.emplace_back(std::move(ptr));
-	}
+inline void NodeBase::addNode(Args ...args){
+	NodeBase::_addNode(&_INHERIT_FROM_NODEBASE::create, &_INHERIT_FROM_NODEBASE::initialize, std::make_unique<_INHERIT_FROM_NODEBASE>(args));
 }
 
 // end of CommandBase
