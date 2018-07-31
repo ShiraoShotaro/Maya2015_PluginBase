@@ -58,6 +58,17 @@ public:
 	virtual ~NodeBase(void);
 
 
+	/// @brief compute関数の独自オーバーライド
+	///
+	/// ノードの計算処理部分のオーバーライド。もしもこの関数を使うのであれば、computeProcess関数を継承先のクラスでオーバーライドすること。
+	/// 主に例外処理に対応する。computeProcess関数にてMStatusExceptionを投げることができ、それをこのcompute関数で受け取り適宜エラー表示する。
+	/// @param plug 計算中のプラグ
+	/// @param data 編集可能な内部データ
+	/// @return 計算に成功した場合kSuccessを返す
+	/// @sa MPxNode::compute http://download.autodesk.com/us/maya/2011help/api/class_m_px_node.html#3dd5454e3fa92598836018ae9ab220c3
+	virtual MStatus compute(const MPlug & plug, MDataBlock & data) override;
+
+
 	/// @brief node addition.
 	///
 	/// YOU HAVE TO EDIT THIS FUNCTION AT main.cpp .
@@ -108,7 +119,7 @@ protected:
 	/// @param isWritable 変更を行うアトリビュート
 	/// @param isStorable 保存可能か
 	/// @throws MStatusException アトリビュート属性の指定時に何らかのエラーが発生した場合
-	static void attributeAffects(MObjects_const & whenChanges, MObjects_const & isAffect);
+	static void setMultiAttributeAffects(MObjects_const & whenChanges, MObjects_const & isAffect);
 
 
 	/// @brief アトリビュートを追加します。
