@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 ### SETTINGS
 # MLL Path
-set(CMAKE_RANTIME_OUTPUT_DIRECTORY $${CMAKE_CURRENT_SOURCE_DIR}/bin CACHE PATH "Directory to export mll file")
+set(CMAKE_RANTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin CACHE PATH "Directory to export mll file")
 
 # Library name
 set(LIBRARY_NAME "__LIBRARY_NAME__" CACHE STRING "Your Plug-in name")
@@ -57,9 +57,8 @@ target_link_libraries(${LIBRARY_NAME} OpenMaya.lib Foundation.lib OpenMaya.lib O
 set_target_properties(${LIBRARY_NAME} PROPERTIES SUFFIX ".mll")
 
 # Source Group is same as the directory structure.
-set(_source_list ${proj_cpp_files} ${proj_hpp_files})
 function(assign_source_group)
-    foreach(_source IN LISTS _source_list)
+    foreach(_source IN ITEMS ${ARGN})
         if (IS_ABSOLUTE "${_source}")
             file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
         else()
@@ -71,3 +70,5 @@ function(assign_source_group)
     endforeach()
 endfunction(assign_source_group)
 
+set(_source_list ${proj_cpp_files} ${proj_hpp_files})
+assign_source_group(${_source_list})
