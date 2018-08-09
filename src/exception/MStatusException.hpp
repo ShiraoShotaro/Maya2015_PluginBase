@@ -1,5 +1,5 @@
-/// @file MStatusException.hpp
-/// @brief MStatusExceptionƒNƒ‰ƒXƒwƒbƒ_ƒtƒ@ƒCƒ‹
+ï»¿/// @file MStatusException.hpp
+/// @brief MStatusExceptionã‚¯ãƒ©ã‚¹ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
 /// @author Shirao Shotaro (pdi)
 /// @date 2017.12
 
@@ -13,71 +13,71 @@
 
 namespace mpb {
 
-/// @brief MStatus‚ğ—áŠOˆ—‚Æ‚µ‚Äˆ—‚µ‚â‚·‚­‚·‚éƒNƒ‰ƒX
+/// @brief MStatusã‚’ä¾‹å¤–å‡¦ç†ã¨ã—ã¦å‡¦ç†ã—ã‚„ã™ãã™ã‚‹ã‚¯ãƒ©ã‚¹
 /// @version 2018.02
 /// @sa MStatus
 ///
-/// OpenMaya C++ API‚ÌMStatusŒ^‚ÉA—áŠOˆ—‚ğ‰Á‚¦‚½‚à‚ÌBMStatusŒ^‚ÌƒGƒ‰[‚ğ—áŠO‚Æ‚µ‚Äˆ—‚µA”ÏG‚Èif•¶‚ğ‘‚©‚È‚­‚ÄÏ‚ŞB
-/// ‚Ü‚½A‚±‚ÌŠÖ”‚ğg—p‚µ—áŠO‚ğ”­¶‚³‚¹‚éê‡‚ÍA•K‚¸ƒLƒƒƒbƒ`‚µA‚»‚ÌƒGƒ‰[Œ‹‰Ê‚ğƒGƒ‰[o—Í‚Ö•\¦‚·‚é‚±‚ÆB
+/// OpenMaya C++ APIã®MStatuså‹ã«ã€ä¾‹å¤–å‡¦ç†ã‚’åŠ ãˆãŸã‚‚ã®ã€‚MStatuså‹ã®ã‚¨ãƒ©ãƒ¼ã‚’ä¾‹å¤–ã¨ã—ã¦å‡¦ç†ã—ã€ç…©é›‘ãªifæ–‡ã‚’æ›¸ã‹ãªãã¦æ¸ˆã‚€ã€‚
+/// ã¾ãŸã€ã“ã®é–¢æ•°ã‚’ä½¿ç”¨ã—ä¾‹å¤–ã‚’ç™ºç”Ÿã•ã›ã‚‹å ´åˆã¯ã€å¿…ãšã‚­ãƒ£ãƒƒãƒã—ã€ãã®ã‚¨ãƒ©ãƒ¼çµæœã‚’ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ã¸è¡¨ç¤ºã™ã‚‹ã“ã¨ã€‚
 class MStatusException{
 public:
 
-	const MStatus stat;		///< MStatus–{‘Ì
-	const MString message;	///< ƒGƒ‰[ƒƒbƒZ[ƒW
-	const MString place;	///< ƒGƒ‰[‚Ì”­¶êŠB‘‚«•û‚ÉŒˆ‚Ü‚è‚Í‚È‚¢‚ªA„§‚ÍƒGƒ‰[‚ª”­¶‚µ‚½‚ÉÀs’†‚ÌŠÖ”–¼B
+	const MStatus stat;		///< MStatusæœ¬ä½“
+	const MString message;	///< ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	const MString place;	///< ã‚¨ãƒ©ãƒ¼ã®ç™ºç”Ÿå ´æ‰€ã€‚æ›¸ãæ–¹ã«æ±ºã¾ã‚Šã¯ãªã„ãŒã€æ¨å¥¨ã¯ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ãŸæ™‚ã«å®Ÿè¡Œä¸­ã®é–¢æ•°åã€‚
 	
-	/// @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	/// 
-	/// ƒGƒ‰[‚ÌƒXƒe[ƒ^ƒX‚ÆƒƒbƒZ[ƒW‚ğ“o˜^‚Å‚«‚éB‚Ü‚½Aplace‚Í”CˆÓ‚Éw’è‚Å‚«Ai•K‚¸w’è‚·‚é‚±‚Æ‚ªD‚Ü‚µ‚¢‚ªjw’è‚µ‚È‚¢ê‡‚Íunlogged‚Æ•\¦‚³‚ê‚éB
-	/// ‚Ü‚½Aunlogged‚Ìê‡AtoStringŠÖ”‚É‚¨‚¢‚Äã‘‚«‚ª‰Â”\‚Å‚ ‚éB
-	/// @param stat ƒGƒ‰[‚ÌƒXƒe[ƒ^ƒX
-	/// @param message ƒƒbƒZ[ƒW
-	/// @param place ”­¶ŒÂŠ‚ğ“Á’è‚Å‚«‚é•¶š—ñ
+	/// ã‚¨ãƒ©ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã¨ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç™»éŒ²ã§ãã‚‹ã€‚ã¾ãŸã€placeã¯ä»»æ„ã«æŒ‡å®šã§ãã€ï¼ˆå¿…ãšæŒ‡å®šã™ã‚‹ã“ã¨ãŒå¥½ã¾ã—ã„ãŒï¼‰æŒ‡å®šã—ãªã„å ´åˆã¯unloggedã¨è¡¨ç¤ºã•ã‚Œã‚‹ã€‚
+	/// ã¾ãŸã€unloggedã®å ´åˆã€toStringé–¢æ•°ã«ãŠã„ã¦ä¸Šæ›¸ããŒå¯èƒ½ã§ã‚ã‚‹ã€‚
+	/// @param stat ã‚¨ãƒ©ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+	/// @param message ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	/// @param place ç™ºç”Ÿå€‹æ‰€ã‚’ç‰¹å®šã§ãã‚‹æ–‡å­—åˆ—
 	MStatusException(const MStatus & stat, const MString & message, const MString & place = "<unlogged>");
 
-	/// ƒfƒXƒgƒ‰ƒNƒ^
+	/// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~MStatusException();
 
-	/// @brief w’èƒtƒH[ƒ}ƒbƒg‚É¬Œ`‚³‚ê‚½ƒGƒ‰[ƒƒbƒZ[ƒW‚ğæ“¾‚·‚éB
+	/// @brief æŒ‡å®šãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«æˆå½¢ã•ã‚ŒãŸã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã™ã‚‹ã€‚
 	/// 
-	/// @return ƒGƒ‰[ƒƒbƒZ[ƒW
+	/// @return ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	MString toString(void) const;
 
-	/// @brief w’èƒtƒH[ƒ}ƒbƒg‚É¬Œ`‚³‚ê‚½ƒGƒ‰[ƒƒbƒZ[ƒW‚ğæ“¾‚·‚éB
+	/// @brief æŒ‡å®šãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«æˆå½¢ã•ã‚ŒãŸã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å–å¾—ã™ã‚‹ã€‚
 	///
-	/// ”­¶‰ÓŠ‚ğƒI[ƒo[ƒ‰ƒCƒh‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚½‚¾‚µAƒI[ƒo[ƒ‰ƒCƒh‚·‚é‚É‚Íplace‚ğunlogged‚É‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚è‚Ü‚·B
-	/// @param place_override ƒI[ƒo[ƒ‰ƒCƒh‚·‚éplace”»•Ê•¶š—ñ
-	/// @return ƒGƒ‰[ƒƒbƒZ[ƒW
+	/// ç™ºç”Ÿç®‡æ‰€ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚ãŸã ã—ã€ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹ã«ã¯placeã‚’unloggedã«ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+	/// @param place_override ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹placeåˆ¤åˆ¥æ–‡å­—åˆ—
+	/// @return ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	MString toString(const MString & place_override) const;
 
-	/// @brief MStatusŒ^‚Ö‚ÌƒLƒƒƒXƒgƒI[ƒo[ƒ[ƒh
-	/// @return stat‚Ì’l
+	/// @brief MStatuså‹ã¸ã®ã‚­ãƒ£ã‚¹ãƒˆã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
+	/// @return statã®å€¤
 	operator MStatus() const;
 
-	/// @brief MStringŒ^‚Ö‚ÌƒLƒƒƒXƒgƒI[ƒo[ƒ[ƒh
-	/// @return toStringŠÖ”‚Ì–ß‚è’l
+	/// @brief MStringå‹ã¸ã®ã‚­ãƒ£ã‚¹ãƒˆã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
+	/// @return toStringé–¢æ•°ã®æˆ»ã‚Šå€¤
 	operator MString() const;
 
-	/// @brief ƒGƒ‰[‹æ•ª‚ª“™‚µ‚¢‚©ƒ`ƒFƒbƒN‚·‚é
-	/// @param comp ”ä‚×‚½‚¢ƒGƒ‰[‹æ•ª
-	/// @return stat‚Æcomp‚ª“™‚µ‚¯‚ê‚Îtrue
+	/// @brief ã‚¨ãƒ©ãƒ¼åŒºåˆ†ãŒç­‰ã—ã„ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+	/// @param comp æ¯”ã¹ãŸã„ã‚¨ãƒ©ãƒ¼åŒºåˆ†
+	/// @return statã¨compãŒç­‰ã—ã‘ã‚Œã°true
 	bool operator==(const MStatus & comp) const;
 
-	/// @brief ƒXƒgƒŠ[ƒ€Œ^‚Ìo—Í‚É‘Î‚·‚éƒI[ƒo[ƒ[ƒh
+	/// @brief ã‚¹ãƒˆãƒªãƒ¼ãƒ å‹ã®å‡ºåŠ›ã«å¯¾ã™ã‚‹ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 	///
-	/// ‚±‚ÌŠÖ”‚ğg—p‚µ‚½ê‡‚ÍAplace‚ÌƒI[ƒo[ƒ‰ƒCƒh‚Í‚Å‚«‚Ü‚¹‚ñB
-	/// @param os ƒXƒgƒŠ[ƒ€
-	/// @param e —áŠO
-	/// @return o—ÍŒã‚ÌƒXƒgƒŠ[ƒ€
+	/// ã“ã®é–¢æ•°ã‚’ä½¿ç”¨ã—ãŸå ´åˆã¯ã€placeã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã¯ã§ãã¾ã›ã‚“ã€‚
+	/// @param os ã‚¹ãƒˆãƒªãƒ¼ãƒ 
+	/// @param e ä¾‹å¤–
+	/// @return å‡ºåŠ›å¾Œã®ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 	friend std::ostream & operator<<(ostream & os, const MStatusException & e);
 
-	/// @brief if“à•ï—áŠOƒXƒ[ƒ†[ƒeƒBƒŠƒeƒB[ŠÖ”
+	/// @brief ifå†…åŒ…ä¾‹å¤–ã‚¹ãƒ­ãƒ¼ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼é–¢æ•°
 	///
-	/// ‚à‚µ‚àƒXƒe[ƒ^ƒX‚ªkSuccessˆÈŠO‚Ì‚ÉAMStatusException‚ğƒXƒ[‚·‚éƒ†[ƒeƒBƒŠƒeƒB[ŠÖ”
-	/// @param stat ƒGƒ‰[‚ÌƒXƒe[ƒ^ƒX
-	/// @param message ƒƒbƒZ[ƒW
-	/// @param place ”­¶ŒÂŠ‚ğ“Á’è‚Å‚«‚é•¶š—ñ
-	/// @throws MStatusException ƒXƒe[ƒ^ƒX‚ªkSuccessˆÈŠO‚¾‚Á‚½ê‡
+	/// ã‚‚ã—ã‚‚ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãŒkSuccessä»¥å¤–ã®æ™‚ã«ã€MStatusExceptionã‚’ã‚¹ãƒ­ãƒ¼ã™ã‚‹ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼é–¢æ•°
+	/// @param stat ã‚¨ãƒ©ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹
+	/// @param message ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+	/// @param place ç™ºç”Ÿå€‹æ‰€ã‚’ç‰¹å®šã§ãã‚‹æ–‡å­—åˆ—
+	/// @throws MStatusException ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãŒkSuccessä»¥å¤–ã ã£ãŸå ´åˆ
 	static void throwIf(const MStatus & stat, const MString & message, const MString & place = "<unlogged>");
 
 protected:

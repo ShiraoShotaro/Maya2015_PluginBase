@@ -1,4 +1,4 @@
-#include "MStatusException.hpp"
+﻿#include "MStatusException.hpp"
 #include <string.h>
 
 mpb::MStatusException::MStatusException(const MStatus & stat, const MString & message, const MString & place)
