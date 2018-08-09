@@ -78,7 +78,7 @@ public:
 
 	/// @brief ノード追加定義の関数
 	///
-	/// * main.cppにて、ユーザーが定義実装する必要があります。 *
+	/// ***main.cppにて、ユーザーが定義実装する必要があります。***
 	///
 	/// @retval MStatus::kSuccess すべてのノード追加に成功した場合
 	/// @retval else ノード追加に失敗した場合
@@ -86,7 +86,7 @@ public:
 	static MStatus addNodes(void);
 
 
-	/// @brief [INTERNAL FUNCTION]ノードを削除します
+	/// @brief (INTERNAL FUNCTION)ノードを削除します
 	///
 	/// 内部関数。ユーザーによって呼び出さないでください。
 	///
@@ -97,7 +97,7 @@ public:
 	///
 	static MStatus removeNodes(MFnPlugin & plugin);
 
-	/// @brief [INTERNAL FUNCTION]MFnPluginのポインタを登録する
+	/// @brief (INTERNAL FUNCTION)MFnPluginのポインタを登録する
 	///
 	/// 内部関数。ユーザーによって呼び出さないでください。
 	///
