@@ -30,15 +30,15 @@ void mpb::NodeBase::computeProcess(const MPlug & plug, MDataBlock & data)
 	MStatusException::throwIf(MStatus::kUnknownParameter, "computeProcess関数が定義されていません", "wlib::NodeBase::computeProcess<default>");
 }
 
-void mpb::NodeBase::setAttributeOption(MFnAttribute & attr, const bool isReadable, const bool isWritable, const bool isStorable, const bool isCache)
+void mpb::NodeBase::setAttributeOption(MFnAttribute & attr, const bool isReadable, const bool isWritable, const bool isStorable, const bool isCache, const bool isKeyable)
 {
 	MStatusException::throwIf(attr.setReadable(isReadable), attr.name() + "アトリビュートのReadableを変更できません");
 	MStatusException::throwIf(attr.setWritable(isWritable), attr.name() + "アトリビュートのWritableを変更できません");
 	MStatusException::throwIf(attr.setStorable(isStorable), attr.name() + "アトリビュートのStorableを変更できません");
 	MStatusException::throwIf(attr.setCached(isCache), attr.name() + "アトリビュートのCachableを変更できません");
+	MStatusException::throwIf(attr.setKeyable(isKeyable), attr.name() + "アトリビュートのKeyableを変更できません");
 }
-
-void mpb::NodeBase::setMultiAttributeAffects(MObjects_const & whenChanges, MObjects_const & isAffect)
+void mpb::NodeBase::setMultiAttributeAffects(const std::vector<const MObject *> & whenChanges, const std::vector<const MObject *> & isAffect)
 {
 	for (auto w = whenChanges.begin(); w != whenChanges.end(); ++w) {
 		for (auto i = isAffect.begin(); i != isAffect.end(); ++i) {
@@ -47,7 +47,7 @@ void mpb::NodeBase::setMultiAttributeAffects(MObjects_const & whenChanges, MObje
 	}
 }
 
-void mpb::NodeBase::addAttributeE(const MObject & obj, const MFnAttribute & attr)
+void mpb::NodeBase::addAttr(const MObject & obj, const MFnAttribute & attr)
 {
-	MStatusException::throwIf(addAttribute(obj), attr.name() + "アトリビュートの追加に失敗");
+	MStatusException::throwIf(MPxNode::addAttribute(obj), attr.name() + "アトリビュートの追加に失敗");
 }
