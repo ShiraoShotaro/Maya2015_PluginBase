@@ -11,92 +11,118 @@ class MFnPlugin;
 
 namespace mpb {
 
-/// @brief The base class for command.
+/// @brief コマンドのベースクラスです
 ///
-/// When you implement your own command, you have to inherit this class.
-///
+/// 新しくコマンドを追加実装する場合は、このクラスを継承して実装してください
 ///
 class CommandBase : public MPxCommand {
 public:
 
-	const MString command_;		///< Command string initialized by constructor.
+	const MString command_;		///< コマンド文字列
 
-	const bool is_undoable_;	///< Is undoable.
+	const bool is_undoable_;	///< UNDOできるか
 
 	CommandBase(void) = delete;
 	
-	/// @brief Constructor
+	/// @brief コンストラクタ
 	///
-	/// @param [in] command Command string. 
+	/// @param [in] command コマンド文字列
+	/// @param [in] is_undoable UNDOできるか
+	///
 	CommandBase(const MString & command, const bool is_undoable) noexcept;
 
 	
-	/// @brief Destructor
+	/// @brief デストラクタ
 	///
-	/// Currently, do nothing.
+	/// 現在は何も処理をしていません
+	///
 	virtual ~CommandBase(void);
 
 
-	/// @brief do It function.
+	/// @brief 実行関数
 	///
-	/// You can override this function.
-	/// this function is doing nothing.
+	/// コマンドで実行したい動作をオーバーライドして定義します。
 	///
-	/// @param [in] args command arguments.
+	/// 1コマンドに対し、一度しか呼び出されません。
+	/// そのため、Undoableなコマンドの場合は、この関数で準備を行い、redo()で実際に変更を加えるような実装が好ましいでしょう。
 	///
-	/// @return result of processing.
+	/// デフォルトでは何も処理をしません
+	///
+	/// @param [in] args コマンドライン引数
+	///
+	/// @return コマンドの実行結果
+	///
 	virtual MStatus doIt(const MArgList& args) override;
 
 	
-	/// @brief redo It function
+	/// @brief 再実行関数
 	///
-	/// You can override this function.
-	/// this function is doing nothing.
+	/// コマンドで再実行したい動作をオーバーライドして定義します。
 	///
-	/// @return result of processing.
+	/// Ctrl-Yでredoされた場合に毎回呼び出されます。
+	///
+	/// デフォルトでは何も処理をしません。Undoableの場合は必ず実装します。
+	///
+	/// @return コマンドの再実行の結果
+	///
 	virtual MStatus redoIt() override;
 	
 
-	/// @brief undo It function
+	/// @brief 元に戻す関数
 	///
-	/// You can override this function.
-	/// this function is doing nothing.
+	/// コマンドを取り消す際の動作をオーバーライドして定義します。
 	///
-	/// @return result of processing.
+	/// Ctrl-Zでundoされた場合に毎回呼び出されます。
+	///
+	/// デフォルトでは何も処理をしません。Undoableの場合は必ず実装します。
+	///
+	/// @return コマンドを元に戻すの結果
+	///
 	virtual MStatus undoIt() override;
 	
 
-	/// @brief redo It function
+	/// @brief 元に戻す、が有効か調べる
 	///
-	/// You can override this function.
-	/// This function returns this->is_undoable_.
+	/// デフォルトではis_undoable_の変数をそのまま返します。
 	///
-	/// @return result of processing.
+	/// また、オーバーライドして独自の定義をすることもできます。
+	///
+	/// @retval true 有効
+	/// @retval false 無効
+	///
 	virtual bool isUndoable() const override;
 
 
-	/// @brief command addition.
+	/// @brief コマンドの追加関数
 	///
-	/// YOU HAVE TO EDIT THIS FUNCTION AT main.cpp .
+	/// ***main.cppにて、ユーザーが定義実装する必要があります。***
 	///
-	/// @param [in,out] plugin MFnPlugin instance.
+	/// @param [in,out] plugin MFnPluginのインスタンス
 	///
-	/// @retval MStatus::kSuccess Succeed.
-	/// @retval else Failed to add nodes.
+	/// @retval MStatus::kSuccess 成功
+	/// @retval else 失敗
+	///
 	static MStatus addCommands(void);
 
 
-	/// @brief remove commands.
+	/// @brief (INTERNAL FUNCTION)コマンドを削除
 	///
-	/// You must not call this function.
-	/// This function is for internal.
+	/// 内部関数。ユーザーによって呼び出さないでください。
 	///
-	/// @param [in,out] plugin MFnPlugin instance.
+	/// @param [in,out] plugin MFnPluginのインスタンス
 	///
-	/// @retval MStatus::kSuccess Succeed.
-	/// @retval else Failed to add nodes.
+	/// @retval MStatus::kSuccess 成功
+	/// @retval else 失敗
+	///
 	static MStatus removeCommands(MFnPlugin & plugin);
 
+
+	/// @brief (INTERNAL FUNCTION)MFnPluginのポインタを登録する
+	///
+	/// 内部関数。ユーザーによって呼び出さないでください。
+	///
+	/// @param [in,out] MFnPluginインスタンス
+	///
 	static void _setMFnPluginPtr(MFnPlugin * plugin);
 
 private:
