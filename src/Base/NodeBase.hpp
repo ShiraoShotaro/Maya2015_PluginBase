@@ -14,9 +14,9 @@ class MFnPlugin;
 
 namespace mpb {
 
-/// @brief コマンドのベースクラス
+/// @brief ノードのベースクラス
 ///
-/// コマンドを実装するときは、このクラスを継承して定義してください。
+/// ノードを実装するときは、このクラスを継承して定義してください。
 ///
 class NodeBase : public MPxNode {
 public:
