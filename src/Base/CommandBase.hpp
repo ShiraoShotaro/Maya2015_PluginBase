@@ -130,15 +130,15 @@ private:
 	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<CommandBase>> instances_;
 
-	template <class _INHERIT_FROM_COMMANDBASE, class ...Args>
-	static void addCommand(Args... args);
+	template <class _INHERIT_FROM_COMMANDBASE> static void addCommand(void);
+	template <class _INHERIT_FROM_COMMANDBASE, class ...Args> static void addCommand(Args... args);
 	static void _addCommand(void * (*creator)(), std::unique_ptr<CommandBase> && command);
 
 };
+template<class _INHERIT_FROM_COMMANDBASE>
+inline void CommandBase::addCommand(void) {}
 template<class _INHERIT_FROM_COMMANDBASE, class ...Args>
-inline void CommandBase::addCommand(Args ...args)
-{
-}
+inline void CommandBase::addCommand(Args ...args) {}
 // end of CommandBase
 }; // end of mpb
 #endif // end of _MAYA_PLUGIN_BASE_COMMAND_BASE_HPP_

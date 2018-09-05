@@ -160,15 +160,19 @@ private:
 	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<NodeBase>> instances_;
 
-	template <class _INHERIT_FROM_NODEBASE, class ...Args>
-	static void addNode(Args... args);
+	template <class _INHERIT_FROM_NODEBASE, class ...Args> static void addNode(void);
+	template <class _INHERIT_FROM_NODEBASE, class ...Args> static void addNode(Args... args);
 	static void _addNode(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<NodeBase> && node);
 
 };
 
 
+template<class _INHERIT_FROM_NODEBASE>
+inline void NodeBase::addNode(void) {
+	NodeBase::_addNode(&_INHERIT_FROM_NODEBASE::create, &_INHERIT_FROM_NODEBASE::initialize, std::make_unique<_INHERIT_FROM_NODEBASE>());
+}
 template<class _INHERIT_FROM_NODEBASE, class ...Args>
-inline void NodeBase::addNode(Args ...args){
+inline void NodeBase::addNode(Args ...args) {
 	NodeBase::_addNode(&_INHERIT_FROM_NODEBASE::create, &_INHERIT_FROM_NODEBASE::initialize, std::make_unique<_INHERIT_FROM_NODEBASE>(args));
 }
 
