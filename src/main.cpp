@@ -1,6 +1,8 @@
-﻿#include <maya/MFnPlugin.h>
-#include "Base/NodeBase.hpp"
-#include "Base/CommandBase.hpp"
+﻿#include "base/NodeBase.hpp"
+#include "base/CommandBase.hpp"
+#include "base/TranslatorBase.hpp"
+#include "exception/MStatusException.hpp"
+#include <maya/MFnPlugin.h>
 
 //*** INCLUDE HEADERS ***
 
@@ -11,7 +13,7 @@ constexpr char kProjectName[] = __PROJECT_NAME;
 constexpr char kVersion[] = "0.1";
 }
 
-MStatus mpb::NodeBase::addNodes(void)
+MStatus mpb::NodeBase::addNodes(void) throw(mpb::MStatusException)
 {
 	MStatus ret = MStatus::kSuccess;
 
@@ -22,7 +24,7 @@ MStatus mpb::NodeBase::addNodes(void)
 	return ret;
 }
 
-MStatus mpb::CommandBase::addCommands(void)
+MStatus mpb::CommandBase::addCommands(void) throw(mpb::MStatusException)
 {
 	MStatus ret = MStatus::kSuccess;
 
@@ -32,6 +34,19 @@ MStatus mpb::CommandBase::addCommands(void)
 
 	return ret;
 }
+
+MStatus mpb::TranslatorBase::addTranslators(void) throw(mpb::MStatusException)
+{
+	MStatus ret = MStatus::kSuccess;
+
+	//ADD TRANSLATORS
+
+	//addTranslator<HOGEHOGE>();
+
+	return ret;
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,51 +59,63 @@ MStatus mpb::CommandBase::addCommands(void)
 MFnPlugin * mpb::NodeBase::plugin_ = nullptr;
 MFnPlugin * mpb::CommandBase::plugin_ = nullptr;
 
+// プラグイン初期化関数
 MStatus initializePlugin(MObject obj) {
 	std::unique_ptr<MFnPlugin> plugin = std::make_unique<MFnPlugin>(obj, "Autodesk", "2015 update2");
 
 	MStatus stat = MStatus::kSuccess;
 
+	std::cerr << "* " << kProjectName << " plug-in version " << kVersion << std::endl;
+
 #ifdef _DEBUG
 	std::cout.rdbuf(std::cerr.rdbuf());
-	std::cout << "[Development Mode] Start to load " << kProjectName << " plug-in." << std::endl;
+	std::cout << "- [NOTICE] This plug-in is builded in development mode." << kVersion << std::endl;
 #endif
 
 	mpb::NodeBase::_setMFnPluginPtr(plugin.get());
 	mpb::CommandBase::_setMFnPluginPtr(plugin.get());
+	mpb::TranslatorBase::_setMFnPluginPtr(plugin.get());
 
-	do {
-		std::cout << "add Nodes." << std::endl;
-		if ((stat = mpb::NodeBase::addNodes()) != MStatus::kSuccess) break;
+	try {
+		std::cout << "- add Nodes." << std::endl;
+		mpb::NodeBase::addNodes();
 
-		std::cout << "add Commands." << std::endl;
-		if ((stat = mpb::CommandBase::addCommands()) != MStatus::kSuccess) break;
+		std::cout << "- add Commands." << std::endl;
+		mpb::CommandBase::addCommands();
+		
+		std::cout << "- add Translator." << std::endl;
+		mpb::TranslatorBase::addTranslators();
 
-		//ADD HERE
 
-	} while (false);
-
-	if (stat == MStatus::kSuccess) {
-#ifdef _DEBUG
-		std::cerr << "[Development Mode]" << kProjectName << " - version " << kVersion << std::endl;
-#else
-		std::cerr << kProjectName << " - version " << kVersion << std::endl;
-#endif
+		// ALL Succeed!!
+		std::cout << "- Completed initializing successfully." << std::endl;
 	}
-	else std::cerr << "Failed to load " << kProjectName << " plug-in." << std::endl;
+	catch (mpb::MStatusException e) {
+		std::cerr << e << std::endl;
+		std::cerr << "Failed to load " << kProjectName << " plug-in." << std::endl;
+		stat = e;
+	}
+
 	return stat;
 }
 
+// プラグイン除去関数
 MStatus uninitializePlugin(MObject obj) {
 	MFnPlugin plugin(obj);
 	MStatus stat = MStatus::kSuccess;
 
-	std::cout << "[Development Mode] Start to uninitialize " << kProjectName << " plug-in." << std::endl;
+	std::cout << "* [NOTICE] Start to uninitialize " << kProjectName << " plug-in." << std::endl;
 
 	do {
 
-		std::cout << "remove Nodes." << std::endl;
+		std::cout << "- remove Nodes." << std::endl;
 		if ((stat = mpb::NodeBase::removeNodes(plugin)) != MStatus::kSuccess) break;
+
+		std::cout << "- remove Commands." << std::endl;
+		if ((stat = mpb::CommandBase::removeCommands(plugin)) != MStatus::kSuccess) break;
+
+		std::cout << "- remove Translators." << std::endl;
+		if ((stat = mpb::TranslatorBase::removeTranslators(plugin)) != MStatus::kSuccess) break;
 
 	} while (false);
 
@@ -101,8 +128,11 @@ MStatus mpb::NodeBase::removeNodes(MFnPlugin & plugin)
 {
 	MStatus ret = MStatus::kSuccess;
 	for (auto ptr = NodeBase::instances_.begin(); ptr != NodeBase::instances_.end(); ++ptr) {
-		if ((ret = plugin.deregisterNode((*ptr)->id_)) != MStatus::kSuccess) {
-			std::cerr << "Failed to deregister node. NODE : " << (*ptr)->name_ << std::endl;
+		if ((ret = plugin.deregisterNode((*ptr)->id_)) == MStatus::kSuccess) {
+			std::cout << "-- deregistered " << (*ptr)->name_ << std::endl;
+		}
+		else {
+			std::cerr << "-- Failed to deregister node. NODE : " << (*ptr)->name_ << std::endl;
 			break;
 		}
 	}
@@ -119,7 +149,9 @@ MStatus mpb::CommandBase::removeCommands(MFnPlugin & plugin)
 {
 	MStatus ret = MStatus::kSuccess;
 	for (auto ptr = CommandBase::instances_.begin(); ptr != CommandBase::instances_.end(); ++ptr) {
-		if ((ret = plugin.deregisterCommand((*ptr)->command_)) != MStatus::kSuccess) {
+		if ((ret = plugin.deregisterCommand((*ptr)->command_)) == MStatus::kSuccess) {
+			std::cout << "-- deregistered " << (*ptr)->command_ << std::endl;
+		}else{
 			std::cerr << "Failed to deregister command. COMMAND : " << (*ptr)->command_ << std::endl;
 			break;
 		}
