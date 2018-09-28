@@ -2,8 +2,10 @@
 
 This is the base project to create a plug-in for Autodesk Maya 2015.
 
-Language is C++, CMake.
+Language is C++, project generating tool is CMake.
 
 # How to use
 
-;;; This project is now Work-In-Progress. Please wait.
+*This project is Work-In-Progress.*
+
+Currentry supported for Node, Command.

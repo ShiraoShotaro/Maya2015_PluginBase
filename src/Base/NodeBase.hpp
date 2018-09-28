@@ -160,7 +160,7 @@ private:
 	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<NodeBase>> instances_;
 
-	template <class _INHERIT_FROM_NODEBASE, class ...Args> static void addNode(void);
+	template <class _INHERIT_FROM_NODEBASE> static void addNode(void);
 	template <class _INHERIT_FROM_NODEBASE, class ...Args> static void addNode(Args... args);
 	static void _addNode(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<NodeBase> && node);
 

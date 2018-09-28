@@ -7,7 +7,7 @@
 //***********************
 
 namespace {
-constexpr char kProjectName[] = "__PROJECT_NAME__";
+constexpr char kProjectName[] = __PROJECT_NAME;
 constexpr char kVersion[] = "0.1";
 }
 
