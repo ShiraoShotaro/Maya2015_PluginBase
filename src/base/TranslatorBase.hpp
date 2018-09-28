@@ -8,6 +8,7 @@
 #include <maya/MFnAttribute.h>
 */
 
+#include "exception/MStatusException.hpp"
 #include <maya/MPxFileTranslator.h>
 #include <maya/MString.h>
 #include <vector>
@@ -16,8 +17,6 @@
 class MFnPlugin;
 
 namespace mpb {
-
-class MStatusException;
 
 /// @brief ノードのベースクラス
 ///
@@ -146,18 +145,18 @@ private:
 
 	template <class _INHERIT_FROM_TRANSLATORBASE> static void addTranslator(void);
 	template <class _INHERIT_FROM_TRANSLATORBASE, class ...Args> static void addTranslator(Args... args);
-	static void _addTranslator(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<TranslatorBase> && translator);
+	static void _addTranslator(void * (*creator)(), std::unique_ptr<TranslatorBase> && translator);
 
 };
 
 
 template<class _INHERIT_FROM_TRANSLATORBASE>
 inline void TranslatorBase::addTranslator(void) {
-	TranslatorBase::_addTranslator(&_INHERIT_FROM_TRANSLATORBASE::create, &_INHERIT_FROM_TRANSLATORBASE::initialize, std::make_unique<_INHERIT_FROM_TRANSLATORBASE>());
+	TranslatorBase::_addTranslator(&_INHERIT_FROM_TRANSLATORBASE::create, std::make_unique<_INHERIT_FROM_TRANSLATORBASE>());
 }
 template<class _INHERIT_FROM_TRANSLATORBASE, class ...Args>
 inline void TranslatorBase::addTranslator(Args ...args) {
-	TranslatorBase::_addTranslator(&_INHERIT_FROM_TRANSLATORBASE::create, &_INHERIT_FROM_TRANSLATORBASE::initialize, std::make_unique<_INHERIT_FROM_TRANSLATORBASE>(args));
+	TranslatorBase::_addTranslator(&_INHERIT_FROM_TRANSLATORBASE::create, std::make_unique<_INHERIT_FROM_TRANSLATORBASE>(args));
 }
 
 // end of CommandBase

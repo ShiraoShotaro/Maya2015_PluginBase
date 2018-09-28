@@ -26,7 +26,7 @@ public:
 	/// @retval MStatus::kSuccess 成功
 	/// @retval else 失敗
 	///
-	static MStatus initialize(void);
+	static MStatus initialize(void) throw (mpb::MStatusException);
 
 	///
 	/// @brief インスタンス生成関数

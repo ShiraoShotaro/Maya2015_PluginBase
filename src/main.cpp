@@ -58,6 +58,7 @@ MStatus mpb::TranslatorBase::addTranslators(void) throw(mpb::MStatusException)
 
 MFnPlugin * mpb::NodeBase::plugin_ = nullptr;
 MFnPlugin * mpb::CommandBase::plugin_ = nullptr;
+MFnPlugin * mpb::TranslatorBase::plugin_ = nullptr;
 
 // プラグイン初期化関数
 MStatus initializePlugin(MObject obj) {
@@ -181,5 +182,5 @@ MStatus mpb::TranslatorBase::removeTranslators(MFnPlugin & plugin)
 }
 
 void mpb::TranslatorBase::_setMFnPluginPtr(MFnPlugin * plugin) { TranslatorBase::plugin_ = plugin; }
-void mpb::TranslatorBase::_addTranslator(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<TranslatorBase> && translator)
+void mpb::TranslatorBase::_addTranslator(void * (*creator)(), std::unique_ptr<TranslatorBase> && translator)
 { TranslatorBase::plugin_->registerFileTranslator(translator->name_, nullptr, creator); }

@@ -1,5 +1,8 @@
 ﻿#include "TranslatorBase.hpp"
 
+std::vector<std::unique_ptr<mpb::TranslatorBase>> mpb::TranslatorBase::instances_;
+
+
 mpb::TranslatorBase::TranslatorBase(const MString & name, const MString & file_extension, const bool can_import, const bool can_export, const MString & options_script_name, const MString & default_options_string, const MString & pixmap_name) noexcept
 	: name_(name), file_extension_(file_extension), can_import_(can_import), can_export_(can_export_),
 	pixmap_name_(pixmap_name), options_script_name_(options_script_name), default_options_string_(default_options_string)

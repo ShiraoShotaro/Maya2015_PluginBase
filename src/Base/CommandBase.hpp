@@ -2,6 +2,7 @@
 #ifndef _MAYA_PLUGIN_BASE_COMMAND_BASE_HPP_
 #define _MAYA_PLUGIN_BASE_COMMAND_BASE_HPP_
 
+#include "exception/MStatusException.hpp"
 #include <maya/MString.h>
 #include <maya/MPxCommand.h>
 #include <vector>
