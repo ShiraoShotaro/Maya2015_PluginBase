@@ -17,6 +17,8 @@ class MFnPlugin;
 
 namespace mpb {
 
+class MStatusException;
+
 /// @brief ノードのベースクラス
 ///
 /// ノードを実装するときは、このクラスを継承して定義してください。
@@ -37,7 +39,15 @@ public:
 	/// @param [in] can_import インポート可能か
 	/// @param [in] can_export エクスポート可能か
 	///
-	TranslatorBase(const MString & name, const MString & file_extension, const bool can_import, const bool can_export) noexcept;
+	TranslatorBase(
+		const MString & name,
+		const MString & file_extension,
+		const bool can_import,
+		const bool can_export,
+		const MString & options_script_name = "",
+		const MString & default_options_string = "",
+		const MString & pixmap_name = "") noexcept;
+
 
 
 	/// @brief デストラクタ
@@ -126,6 +136,10 @@ private:
 	const bool can_import_;			///< インポート可能か
 	const bool can_export_;			///< エクスポート可能か
 	const MString file_extension_;	///< ファイル拡張子
+	const MString pixmap_name_;
+	const MString options_script_name_;
+	const MString default_options_string_;
+	
 		
 	static MFnPlugin * plugin_;
 	static std::vector<std::unique_ptr<TranslatorBase>> instances_;

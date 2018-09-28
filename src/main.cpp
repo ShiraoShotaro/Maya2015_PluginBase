@@ -162,3 +162,24 @@ MStatus mpb::CommandBase::removeCommands(MFnPlugin & plugin)
 void mpb::CommandBase::_setMFnPluginPtr(MFnPlugin * plugin) { CommandBase::plugin_ = plugin; }
 void mpb::CommandBase::_addCommand(void *(*creator)(), std::unique_ptr<CommandBase>&& command)
 { CommandBase::plugin_->registerCommand(command->command_, creator); }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// TRANSLATOR
+MStatus mpb::TranslatorBase::removeTranslators(MFnPlugin & plugin)
+{
+	MStatus ret = MStatus::kSuccess;
+	for (auto ptr = TranslatorBase::instances_.begin(); ptr != TranslatorBase::instances_.end(); ++ptr) {
+		if ((ret = plugin.deregisterFileTranslator((*ptr)->name_)) == MStatus::kSuccess) {
+			std::cout << "-- deregistered " << (*ptr)->name_ << std::endl;
+		}
+		else {
+			std::cerr << "Failed to deregister command. COMMAND : " << (*ptr)->name_ << std::endl;
+			break;
+		}
+	}
+	return ret;
+}
+
+void mpb::TranslatorBase::_setMFnPluginPtr(MFnPlugin * plugin) { TranslatorBase::plugin_ = plugin; }
+void mpb::TranslatorBase::_addTranslator(void * (*creator)(), MStatus(*initialize)(), std::unique_ptr<TranslatorBase> && translator)
+{ TranslatorBase::plugin_->registerFileTranslator(translator->name_, nullptr, creator); }
