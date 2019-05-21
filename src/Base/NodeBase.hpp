@@ -119,19 +119,13 @@ protected:
 	///
 	virtual void computeProcess(const MPlug & plug, MDataBlock & data);
 
-
-	/// @brief アトリビュートの属性(readable, writable, storable, cached)を一括指定します。
-	///
-	/// @param [in] is_readable 読み込み可能か
-	/// @param [in] is_writable 書き込み可能か
-	/// @param [in] is_storable 保存可能か
-	/// @param [in] is_cache キャッシュ可能か
-	/// @param [in] is_keyable キーフレーム設定可能か
-	///
-	/// @throws MStatusException アトリビュート属性の指定時に何らかのエラーが発生した場合
-	///
-	static void setAttributeOption(MFnAttribute & attr, const bool is_readable, const bool is_writable, const bool is_storable, const bool is_cache, const bool is_keyable = false);
-
+	struct AttributeOptions{
+		bool is_readable, is_writable, is_cached, is_keyable, is_storable;
+		AttributeOptions(const bool is_readable = true, const bool is_writable = true, const bool is_cached = true, const bool is_keyable = true, const bool is_storable = true) noexcept;
+		AttributeOptions(const AttributeOptions&) = default;
+		void apply(MFnAttribute & attr) const;
+	};
+	
 
 	/// @brief アトリビュートの変更の影響設定を一括で行います。
 	///
@@ -153,6 +147,18 @@ protected:
 	/// @throws MStatusException アトリビュートの追加に失敗した場合
 	///
 	static void addAttr(const MObject & obj, const MFnAttribute & attr);
+
+
+	/// @brief Enumアトリビュートの追加のショートカット
+	static void addEnumAttr(MObject & target, const MString & longname, const MString & shortname, const AttributeOptions & options, const std::vector<std::pair<MString, short>> & enums, const short def_value);
+
+	/// @brief Typeアトリビュート追加のショートカット
+	template <class T> static void addUnitAttr(MObject & target, const MString & longname, const MString & shortname, const T & def_value, const AttributeOptions & options);
+
+	/// @brief Numericアトリビュートの追加のショートカット
+	static void addNumericAttr(MObject & target, const MString & longname, const MString & shortname, const AttributeOptions & options, const MFnNumericData::Type & numeric_data = MFnNumericData::Type::kDouble, const double & def_value = 0.0);
+	static void addNumericAttr(MObject & target, const MString & longname, const MString & shortname, const AttributeOptions & options, const MObject & child1, const MObject & child2, const MObject & child3 = MObject::kNullObj);
+
 
 private:
 	

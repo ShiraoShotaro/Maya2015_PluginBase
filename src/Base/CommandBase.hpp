@@ -137,9 +137,13 @@ private:
 
 };
 template<class _INHERIT_FROM_COMMANDBASE>
-inline void CommandBase::addCommand(void) {}
+inline void CommandBase::addCommand(void) {
+	CommandBase::_addCommand(&_INHERIT_FROM_COMMANDBASE::create, std::make_unique<_INHERIT_FROM_COMMANDBASE>());
+}
 template<class _INHERIT_FROM_COMMANDBASE, class ...Args>
-inline void CommandBase::addCommand(Args ...args) {}
+inline void CommandBase::addCommand(Args ...args) {
+	CommandBase::_addCommand(&_INHERIT_FROM_COMMANDBASE::create, std::make_unique<_INHERIT_FROM_COMMANDBASE>(args));
+}
 // end of CommandBase
 }; // end of mpb
 #endif // end of _MAYA_PLUGIN_BASE_COMMAND_BASE_HPP_
